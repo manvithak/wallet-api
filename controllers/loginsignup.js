@@ -22,11 +22,13 @@ function create (req, res) {
         res.json({
           message:'user register successfully'
         })
-      }else{
+      }
+      else{
         res.json({
           message: 'user already exists'
         })
-      }   
+      }
+
   });
  }
  }) 

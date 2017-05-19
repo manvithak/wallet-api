@@ -1,6 +1,7 @@
 var items = require('./users');
 var jwt = require('jsonwebtoken');
-function task(){};
+var items = items.users;
+function task(){ };
 
 task.roles = {
   USER: 'user',
@@ -8,6 +9,7 @@ task.roles = {
 }
 task.create = function (params, callback) {
 	task.getByPhone(params.phone,function(data){
+
 		if(!data){
 			items.create({
                        phone: params.phone,
@@ -23,7 +25,7 @@ task.create = function (params, callback) {
                     task.save();
                    
                     console.log(task);
-                   })
+                   });
                 }
           callback(data);      
 	});	

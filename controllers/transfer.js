@@ -1,4 +1,5 @@
 var task = require('../models/task');
+var transaction = require('../models/transaction_actions')
 module.exports.transfer = function(req, res){
 	var transfer = {
 		token: req.body.token,
@@ -16,6 +17,7 @@ module.exports.transfer = function(req, res){
 								res.json({
 									message:'transfer success'
 								})
+								//transaction.updateLog(data.dataValues.phone,transfer);
 							});
 						}
 					else{

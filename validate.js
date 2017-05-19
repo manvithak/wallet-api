@@ -14,7 +14,7 @@ validate.validateUser = function(User,callback){
                   phone: Joi.string().regex(/[0-9]/, phone).length(10).required(),
                   f_name: Joi.string().regex(/^\S+$/, f_name).min(2).required(),
                   l_name: Joi.string().regex(/^\S+$/, l_name).min(2).required(),
-                  //dob: Joi.date().min(1997-01-01).required()
+                  dob: Joi.date().required()
                 };
 
         if( (Joi.validate(phone, schema.phone)).error ){
@@ -31,8 +31,11 @@ validate.validateUser = function(User,callback){
           
             callback('last name must have 2 characters without spaces');
           
-        }
-        else if( age < 20 ){
+        }else if( (Joi.validate(dob, schema.dob)).error ){
+
+            callback('age should be graeter than 20');
+
+        }else if( age < 20 ){
           
             callback('user age should be greater than 20');
         
@@ -57,7 +60,7 @@ validate.validateCard = function(Card, callback){
         }else if( Card.exp_year == year && Card.exp_month < month + 1){
           
             callback('enter valid month and year');
-            
+
         }else{
             callback(null);
           }
