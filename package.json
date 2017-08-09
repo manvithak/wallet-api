@@ -7,9 +7,12 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-  	"express": "*",
-  	"joi": "*"
-
+    "cors": "^2.8.4",
+    "express": "4.15.3",
+    "joi": "10.5.0 ",
+    "mysql": "2.13.0",
+    "sequelize": "3.30.4 ",
+    "stripe": "4.19.1"
   },
   "author": "manvitha",
   "license": "ISC"

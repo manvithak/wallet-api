@@ -1,45 +1,43 @@
-var task = require('../models/task');
+var User= require('../models/users');
 var validate = require('../validate.js');
 
 function create (req, res) {
-  var User={
-            phone: req.body.phone,
-            password: req.body.password,
-            f_name: req.body.first_name,
-            l_name: req.body.last_name,
-            dob: req.body.dob,
-            gender: req.body.gender,
-            
-          }
-  validate.validateUser(User, function(data){
+  var user={
+    phone: req.body.phone,
+    password: req.body.password,
+    email: req.body.email
+  }
+  validate.validateUser(user, function(data){
   if(data){
     res.json({
       message: data
     })
   }else{
-  task.create(User, function (data) {
-      if(!data){
-        res.json({
-          message:'user register successfully'
-        })
-      }
-      else{
-        res.json({
-          message: 'user already exists'
-        })
-      }
+    User.create(user, function (data) {
+        if(!data){
+          res.json({
+            message:'user register successfully',
+          })
+        }
+        else{
+          res.json({
+            message: 'user already exists'
+          })
+        }
 
-  });
- }
- }) 
+    });
+   }
+  }) 
 }
 
 function login (req, res) {
-  var User = {
+  var user = {
     phone: req.body.phone,
-    password: req.body.password
+    password: req.body.password,
+    email:req.body.email
   }
-  task.login(User,function(data,err,token){
+  User.login(user,function(data,err,token){
+    console.log(data.dataValues.points);
     if(data){
       if(err){
           res.json({
@@ -49,7 +47,8 @@ function login (req, res) {
       }else{
       res.json({
         message:'login successful',
-        token: token
+        token: token,
+        balance:data.dataValues.points
       })
     }
     }else{

@@ -1,39 +1,39 @@
-var api_key = 'sk_test_XMNNSykVep2aCyyOCPSuAHgt';  // secret stripe API key
+var secret = require('../secret');
+var api_key = process.env.api_key;  // secret stripe API key
 var stripe = require('stripe')(api_key);
-var task = require('../models/task');
-var validate = require('../validate.js')
+var User = require('../models/users');
+var validate = require('../validate.js');
 
 module.exports.addpoints = function(req,res){
 var Card={
-            exp_month: req.body.month,
-            exp_year: req.body.year,
-            number: req.body.number,
-            amount: req.body.amount,
-            cvv: req.body.cvv,
-            token:req.body.token
-        }
+	expMonth:req.body.month,
+	expYear:req.body.year,
+	number:req.body.number,
+	amount:req.body.amount,
+	cvv:req.body.cvv,
+	token:req.body.token
+	}
 validate.validateCard(Card, function(data){
+
   if(data){
     res.json({
       message: data
     })
-  }
-	else{  
-
-
-		stripe.tokens.create({
-		  card: {
+   
+  }else{ 
+  			stripe.tokens.create({
+		    card: {
 		    "number": Card.number,
-		    "exp_month": Card.exp_month,
-		    "exp_year": Card.exp_year,
+		    "exp_month": Card.expMonth,
+		    "exp_year": Card.expYear,
 		    "cvc": Card.cvv
 		  }
-		}, function(err, token) {
+		 }, function(err, token) {
 		  console.log(err);
 		  console.log(token);
 		  if(err){
 		  	res.json({
-		  		message:'error in transaction'
+		  		message:'error in transaction, enter valid details'
 		  	})
 		  }
 		  stripe.charges.create({
@@ -48,12 +48,11 @@ validate.validateCard(Card, function(data){
 		  	res.json({
 		  		message: 'error in transaction'
 		  	})
-		  }
-		  	else
-		  	{				
-			task.retrievePoints(Card.token,function(data){
+		  }else
+		  {				
+			User.retrievePoints(Card.token,function(data){
 				console.log(data);
-				task.updatePoints(parseInt(data) + parseInt(Card.amount),Card.token,function(result){
+				User.updatePoints(parseInt(data) + parseInt(Card.amount),Card.token,function(result){
 					if(result){
 						res.json({
 							message:'points added to wallet'
@@ -66,7 +65,7 @@ validate.validateCard(Card, function(data){
 				});
 
 			});
-		  	}
+		  }
 		  });
 
 
